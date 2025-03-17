@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/rivo/tview"
 	"github.com/spf13/cobra"
 	"goPasswordManager/internal/crypto"
 	"goPasswordManager/internal/storage"
@@ -41,9 +42,56 @@ var enterCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fmt.Println("Successfully authenticated!")
-		//todo
+		runTUI()
 	},
+}
+
+func runTUI() {
+	app := tview.NewApplication()
+
+	list := tview.NewList().
+		AddItem("service", "login", '1', nil).
+		AddItem("Entry 2", "", '2', nil).
+		AddItem("Entry 3", "", '3', nil).
+		AddItem("Entry 3", "", '3', nil).
+		AddItem("Entry 3", "", '3', nil).
+		AddItem("Entry 3", "", '3', nil).
+		AddItem("Entry 3", "", '3', nil).
+		AddItem("Entry 3", "", '3', nil).
+		AddItem("Entry 3", "", '3', nil).
+		AddItem("Entry 3", "", '3', nil).
+		AddItem("Entry 3", "", '3', nil).
+		AddItem("Quit", "Press to exit", 'q', func() {
+			app.Stop() // Выход по нажатию 'q'
+		})
+
+	list.SetBorder(true).
+		SetTitle(" Entries ").
+		SetTitleAlign(tview.AlignLeft)
+
+	details := tview.NewTextView().
+		SetDynamicColors(true).
+		SetText("Select an entry to view details")
+
+	details.SetBorder(true).
+		SetTitle(" Details ").
+		SetTitleAlign(tview.AlignLeft)
+
+	// Обработчик выбора элемента в списке
+	list.SetChangedFunc(func(index int, mainText string, secondaryText string, shortcut rune) {
+		details.SetText(fmt.Sprintf(
+			"[green]Entry: [white]%s\n[green]Description: [white]%s\n\n[yellow]Press 'q' to quit",
+			mainText, secondaryText,
+		))
+	})
+
+	flex := tview.NewFlex().
+		AddItem(list, 0, 1, true).
+		AddItem(details, 0, 2, false)
+
+	if err := app.SetRoot(flex, true).SetFocus(flex).Run(); err != nil {
+		panic(err)
+	}
 }
 
 func isValidMasterPassword(derivedKey, storedHash []byte) bool {
