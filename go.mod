@@ -4,6 +4,7 @@ go 1.24.1
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
+	github.com/atotto/clipboard v0.1.4
 	github.com/rivo/tview v0.0.0-20241227133733-17b7edb88c57
 	github.com/spf13/cobra v1.9.1
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519

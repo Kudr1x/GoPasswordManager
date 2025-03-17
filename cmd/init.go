@@ -19,7 +19,6 @@ var initCmd = &cobra.Command{
 		}
 		survey.AskOne(promptName, &storageName)
 
-		// Проверка существования хранилища
 		if storage.Exists(storageName) {
 			fmt.Printf("Storage '%s' already exists!\n", storageName)
 			os.Exit(1)
